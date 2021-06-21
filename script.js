@@ -32,21 +32,29 @@ const wrongFormat = [];
 
 // Scroll
 
+// Get Random Number up to a max number 
+function getRandomInt(max){
+  return Math.floor(Math.random() * Math.floor(max))
+}
+
 // Create Correct/Incorrect Random Equations
 function createEquations() {
   // Randomly choose how many correct equations there should be
-  // const correctEquations =
+  const correctEquations = getRandomInt(questionAmount)
+  console.log('Correct equations:',correctEquations)
   // Set amount of wrong equations
-  // const wrongEquations =
-  // Loop through, multiply random numbers up to 9, push to array
-  // for (let i = 0; i < correctEquations; i++) {
-  //   firstNumber =
-  //   secondNumber =
-  //   const equationValue = firstNumber * secondNumber;
-  //   const equation = `${firstNumber} x ${secondNumber} = ${equationValue}`;
-  //   equationObject = { value: equation, evaluated: 'true' };
-  //   equationsArray.push(equationObject);
-  // }
+  const wrongEquations = questionAmount - correctEquations;
+  console.log('wrong equations:',wrongEquations)
+//   // Loop through, multiply random numbers up to 9, push to array
+//   for (let i = 0; i < correctEquations; i++) {
+//     firstNumber =
+//     secondNumber =
+//     const equationValue = firstNumber * secondNumber;
+//     const equation = `${firstNumber} x ${secondNumber} = ${equationValue}`;
+//     equationObject = { value: equation, evaluated: 'true' };
+//     equationsArray.push(equationObject);
+//   }
+
   // Loop through, mess with the equation results, push to array
   // for (let i = 0; i < wrongEquations; i++) {
   //   firstNumber =
@@ -85,8 +93,8 @@ function createEquations() {
 
 // Display 3,2,1,GO
 function countdownStart() {
-  let seconds = 3;
-  countdown.textContent = seconds;
+  let seconds = 2;
+  countdown.textContent = 3;
   const start = setInterval(() => {
     if (seconds <= 0) {
       countdown.textContent = "GO!";
@@ -103,6 +111,7 @@ function showCountdown() {
   countdownPage.hidden = false;
   splashPage.hidden = true;
   countdownStart();
+  createEquations();
 }
 
 // Get the value from selected radio button
