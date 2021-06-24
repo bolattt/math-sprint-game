@@ -29,8 +29,6 @@ let secondNumber = 0;
 let equationObject = {};
 const wrongFormat = [];
 
-// Score
-let playerScore = 0;
 
 // Time
 let timer;
@@ -43,10 +41,44 @@ let finalTimeDisplay = '0.0s';
 // Scroll
 let valueY = 0;
 
+// Reset Game 
+function playAgain(){
+  gamePage.addEventListener('click',startTimer)
+  scorePage.hidden = true;
+  splashPage.hidden = false;
+  equationsArray = []
+  playerGuessArray = []
+  valueY = 0;
+  playAgainBtn.hidden = true;
+}
+
+// Show Score Page
+function showScorePage(){
+  gamePage.hidden = true;
+  scorePage.hidden = false;
+  // Show play again button after 1 second
+  setTimeout(() => {
+    playAgainBtn.hidden = false;
+  }, 1000);
+}
+
+// Format & Display time in DOM
+function scoresToDOM(){
+
+  finalTimeDisplay = finalTime.toFixed(1);
+  baseTime  = timePlayed.toFixed(1)
+  // penaltyTime = penaltyTime.toFixed(1)
+  baseTimeEl.textContent = `Base Time: ${baseTime}s`;
+  penaltyTimeEl.textContent = `Penalty: ${penaltyTime}s`;
+  finalTimeEl.textContent = `${finalTimeDisplay}s`
+  // Scroll to Top, go to Score page
+  itemContainer.scrollTo({ top:0, behavior:'instant' })
+  showScorePage();
+}
+
 
 // Stop Timer, Process Results, go to Score page 
 function checkTime(){
- 
   if(playerGuessArray.length == questionAmount ){
     console.log('player guess array:',playerGuessArray)
     clearInterval(timer)
@@ -55,7 +87,7 @@ function checkTime(){
     equationsArray.forEach((equation,index) => {
       if(equation.evaluated == playerGuessArray[index]){
         // Correct guest, no penalty
-        playerScore += 1;
+     
       } else{
         // Incorrect guess, Add penalty
         penaltyTime += 0.5;
@@ -64,8 +96,8 @@ function checkTime(){
 
     finalTime = penaltyTime + timePlayed;
     console.log('timePlayed',timePlayed,'penaltyTime',penaltyTime,'finalTime ',finalTime)
+    scoresToDOM();
   }
-
 }
 
 // Add a tenth of a second to timePlayed
@@ -181,17 +213,16 @@ function populateGamePage() {
 
 // Display 3,2,1,GO
 function countdownStart() {
-  let seconds = 2;
   countdown.textContent = 3;
-  const start = setInterval(() => {
-    if (seconds <= 0) {
-      countdown.textContent = "GO!";
-      clearInterval(seconds);
-    } else {
-      countdown.textContent = seconds;
-    }
-    seconds--;
+  setTimeout(() => {
+    countdown.textContent = 2;
   }, 1000);
+  setTimeout(() => {
+    countdown.textContent = 1;
+  }, 2000);
+  setTimeout(() => {
+    countdown.textContent = 'Go!';
+  }, 3000);
 }
 
 // Navigate from splash page to countdown page
