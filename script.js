@@ -45,7 +45,8 @@ let valueY = 0;
 // Refresh Splash page best scores
 function bestScoresToDOM(){
   bestScores.forEach((item,index) => {
-    item.textContent = `${bestScoreArray[index].bestScore}s`
+    const bestScoreEl = item;
+    bestScoreEl.textContent = `${bestScoreArray[index].bestScore}s`
   })
 }
 
@@ -63,6 +64,25 @@ function getSavedBestScores(){
     localStorage.setItem('bestScore',JSON.stringify(bestScoreArray))
   }
   bestScoresToDOM();
+}
+
+// Update Best Score Array 
+function updateBestScore(){
+  bestScoreArray.forEach((score,index) => {
+    // Select correct best score to update  
+    if(questionAmount == score.questions){
+      // return Best Score as number with one decimal 
+      const savedBestScore = Number(bestScoreArray[index].bestScore)
+      // Update if the new final score is less or replacing zero
+      if(savedBestScore === 0 || savedBestScore > finalTime) {
+        bestScoreArray[index].bestScore = finalTimeDisplay;
+      }
+    }
+  })
+  // Update splash page
+  bestScoresToDOM();
+  // Save to local storage
+  localStorage.setItem('bestScores',JSON.stringify(bestScoreArray))
 }
 
 // Reset Game 
@@ -95,6 +115,7 @@ function scoresToDOM(){
   baseTimeEl.textContent = `Base Time: ${baseTime}s`;
   penaltyTimeEl.textContent = `Penalty: ${penaltyTime}s`;
   finalTimeEl.textContent = `${finalTimeDisplay}s`
+  updateBestScore();
   // Scroll to Top, go to Score page
   itemContainer.scrollTo({ top:0, behavior:'instant' })
   showScorePage();
@@ -237,28 +258,27 @@ function populateGamePage() {
 
 // Display 3,2,1,GO
 function countdownStart() {
-  countdown.textContent = 3;
-  setTimeout(() => {
-    countdown.textContent = 2;
+  let count = 3;
+  countdown.textContent = count;
+  const timer = setInterval(() => {
+    count--;
+    if(count == 0){
+      countdown.textContent = 'GO!'
+    } else if(count == -1){
+      showGamePage();
+      clearInterval(timer)
+    } else {
+      countdown.textContent = count;
+    }
   }, 1000);
-  setTimeout(() => {
-    countdown.textContent = 1;
-  }, 2000);
-  setTimeout(() => {
-    countdown.textContent = 'Go!';
-  }, 3000);
 }
 
-// Navigate from splash page to countdown page
+// Navigate from splash page to countdown page to Game page 
 function showCountdown() {
   countdownPage.hidden = false;
   splashPage.hidden = true;
+  populateGamePage();  
   countdownStart();
-  // createEquations();
-  populateGamePage();
-  setTimeout(() => {
-    showGamePage();
-  }, 4000);
 }
 
 // Get the value from selected radio button
